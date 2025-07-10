@@ -15,14 +15,19 @@ services:
       - laravel_vue_store
 
 
-#  front:
-#    build:
-#      context: ./front
-#      dockerfile: _docker/Dockerfile
-#    ports:
-#      - ""
-#    volumes:
-#      - ./front:/app
+  front:
+    build:
+      context: ./front
+      dockerfile: _docker/Dockerfile
+    ports:
+      - "${FRONT_PORT}:${FRONT_PORT}"
+    volumes:
+      - ./front:/app
+    depends_on:
+      - back
+    networks:
+      - laravel_vue_store
+
 
   mysql:
     image: mysql:8
@@ -39,6 +44,8 @@ services:
 
 volumes:
   mysql_data:
+  front:
+  back:
 
 networks:
   laravel_vue_store:
