@@ -3,10 +3,10 @@
     <template #title> Sign in to your account</template>
     <template #form-items>
       <div
-        v-if="errors.request"
-        class="text-center text-red-500 text-sm mt-1 ml-1 font-medium"
+        v-if="resError"
+        class="text-center text-red-500 text-lg mt-1 ml-1 font-medium"
       >
-        {{ errors.request }}
+        {{ resError }}
       </div>
       <div>
         <label
@@ -27,10 +27,10 @@
         </div>
         <div>
           <p
-            v-if="errors.login"
+            v-if="validationErrors.login"
             class="text-red-500 text-sm mt-1 ml-1 font-medium"
           >
-            {{ errors.login }}
+            {{ validationErrors.login }}
           </p>
         </div>
       </div>
@@ -54,10 +54,10 @@
         </div>
         <div>
           <p
-            v-if="errors.password"
+            v-if="validationErrors.password"
             class="text-red-500 text-sm mt-1 ml-1 font-medium"
           >
-            {{ errors.password }}
+            {{ validationErrors.password }}
           </p>
         </div>
       </div>
@@ -79,20 +79,24 @@
 
 <script setup lang="ts">
 import AuthLayout from '@/layouts/AuthLayout.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useValidation } from '@/composables/useValidation.ts'
-import { authRequest } from '@/api/auth.ts'
+import { authRequest } from '@/api/authRequest'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const formData = reactive({
   login: '',
   password: '',
 })
 
-const { errors, validate } = useValidation(formData, {
+const { validationErrors, validate } = useValidation(formData, {
   login: { required: true },
   password: { required: true },
   request: {},
 })
+
+const resError = ref('')
 
 async function submitHandler() {
   if (!validate()) return
@@ -100,6 +104,9 @@ async function submitHandler() {
     login: formData.login,
     password: formData.password,
   })
-  if (data.error) errors.request = data.error
+  if (!data) {
+    return (resError.value = 'Invalid Credentials')
+  }
+  router.push({ name: 'home' })
 }
 </script>

@@ -8,3 +8,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/signup', [AuthController::class, 'signup']);
+Route::get('/user', function () {
+    return auth()->user();
+})->middleware('auth:sanctum');

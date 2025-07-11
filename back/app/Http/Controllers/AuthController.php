@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\SignupRequest;
 use App\Interfaces\AuthServiceInterface;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -13,19 +14,26 @@ class AuthController extends Controller
     {
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
+        $dto = $request->toDto();
 
-        $request->validate([
-            'login' => 'required|string',
-            'password' => 'required|string'
-        ]);
+        $token = $this->authService->login($dto);
 
-        $token = $this->authService->login($request->login, $request->password);
-        
         return response()->json([
             'token' => $token,
         ]);
+    }
+
+    public function signup(SignUpRequest $request)
+    {
+        $dto = $request->toDto();
+
+        $data = $this->authService->signup($dto);
+
+        return response()->json([
+            $data
+        ], 201);
     }
 
 }

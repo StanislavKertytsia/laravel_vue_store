@@ -7,7 +7,7 @@ type FieldRules = {
 }
 
 export function useValidation(fields: Record<string, string>, rules: FieldRules) {
-  const errors = reactive<Record<string, string>>({})
+  const validationErrors = reactive<Record<string, string>>({})
 
   function validate(): boolean {
     let isValid = true
@@ -15,10 +15,10 @@ export function useValidation(fields: Record<string, string>, rules: FieldRules)
     for (const fieldName in rules) {
       const value = fields[fieldName]
       const rule = rules[fieldName]
-      errors[fieldName] = ''
+      validationErrors[fieldName] = ''
 
       if (rule.required && !value) {
-        errors[fieldName] = `${fieldName} is required.`
+        validationErrors[fieldName] = `Field is required.`
         isValid = false
       }
     }
@@ -27,7 +27,7 @@ export function useValidation(fields: Record<string, string>, rules: FieldRules)
   }
 
   return {
-    errors,
+    validationErrors,
     validate,
   }
 }
