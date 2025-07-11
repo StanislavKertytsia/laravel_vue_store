@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use Illuminate\Support\Testing\Fakes\Fake;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'users';
 
@@ -40,18 +40,20 @@ class User extends Authenticatable
         'roles' => 'user',
     ];
 
-    protected $casts =[
+    protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        ];
+    ];
 
-    protected static function boot(){
+    protected static function boot()
+    {
         parent::boot();
 
         static::creating(function ($model) {
             $model->{$model->getKeyName()} = Str::uuid();
         });
     }
+
     public function orders()
     {
         return $this->hasMany(Order::class);

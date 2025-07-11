@@ -7,23 +7,26 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <form
+        novalidate
+        class="space-y-6"
+        action="#"
+        method="POST"
+        @submit="$emit('submit', $event)"
+      >
         <slot name="form-items"></slot>
         <div>
-          <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-           <slot name="submit-btn"></slot>
+          <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <slot name="submit-btn"></slot>
           </button>
         </div>
       </form>
-     <slot name="subform-text"></slot>
+      <slot name="subform-text"></slot>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
-
-<style scoped>
-
-</style>
+<script setup lang="ts"></script>
