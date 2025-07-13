@@ -43,7 +43,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'roles' => 'array'
     ];
+
+    public function addRole(string $role)
+    {
+        $roles = $this->roles ?? [];
+
+        if (!in_array('user', $roles)) {
+            $roles[] = 'user';
+        }
+
+        if ($role !== 'user' && !in_array($role, $roles)) {
+            $roles[] = $role;
+        }
+
+        $this->roles = array_values(array_unique($roles));
+        $this->save();
+    }
 
     protected static function boot()
     {

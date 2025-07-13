@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignupRequest;
-use App\Interfaces\AuthServiceInterface;
+use App\Interfaces\AuthInterface;
 
 class AuthController extends Controller
 {
     public function __construct(
-        protected AuthServiceInterface $authService
+        protected AuthInterface $authService
     )
     {
     }
@@ -18,22 +18,20 @@ class AuthController extends Controller
     {
         $dto = $request->toDto();
 
-        $token = $this->authService->login($dto);
+        $response = $this->authService->login($dto);
 
-        return response()->json([
-            'token' => $token,
-        ]);
+        return response()->json($response, 200);
     }
 
     public function signup(SignUpRequest $request)
     {
         $dto = $request->toDto();
 
-        $data = $this->authService->signup($dto);
+        $response = $this->authService->signup($dto);
 
-        return response()->json([
-            $data
-        ], 201);
+        return response()->json(
+            $response
+            , 201);
     }
 
 }

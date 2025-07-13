@@ -2,24 +2,31 @@
 
 namespace App\Providers;
 
-use App\Interfaces\AuthServiceInterface;
+use App\Http\Middleware\IsAdminMiddleware;
+use App\Interfaces\AuthInterface;
+use App\Interfaces\OrderInterface;
+use App\Interfaces\ProductInterface;
 use App\Services\AuthService;
+use App\Services\OrderService;
+use App\Services\ProductService;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(AuthInterface::class, AuthService::class);
+
+        $this->app->bind(ProductInterface::class, ProductService::class);
+
+        $this->app->bind(OrderInterface::class, OrderService::class);
+
+
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
+    public function boot(Router $router): void
     {
+        $router->aliasMiddleware('admin', IsAdminMiddleware::class);
     }
 }

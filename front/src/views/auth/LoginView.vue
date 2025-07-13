@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout @submit.prevent="submitHandler">
+  <auth-layout @submit.prevent="submitHandler">
     <template #title> Sign in to your account</template>
     <template #form-items>
       <div
@@ -10,19 +10,19 @@
       </div>
       <div>
         <label
-          for="login"
           class="block text-sm/6 font-medium text-gray-900"
+          for="login"
           >Login</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.login"
-            placeholder="Email or Phone"
-            type="text"
-            name="login"
             id="login"
-            required
+            v-model="formData.login"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="login"
+            placeholder="Email or Phone"
+            required
+            type="text"
           />
         </div>
         <div>
@@ -37,19 +37,19 @@
 
       <div>
         <label
-          for="password"
           class="block text-sm/6 font-medium text-gray-900"
+          for="password"
           >Password
         </label>
         <div class="mt-2">
           <input
-            v-model="formData.password"
-            placeholder="*******"
-            type="password"
-            name="password"
             id="password"
-            required
+            v-model="formData.password"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="password"
+            placeholder="*******"
+            required
+            type="password"
           />
         </div>
         <div>
@@ -67,24 +67,24 @@
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Don't have an account yet?
         <router-link
-          to="/signup"
           class="font-semibold text-indigo-600 hover:text-indigo-500"
+          to="/signup"
         >
           Sign up
         </router-link>
       </p>
     </template>
-  </AuthLayout>
+  </auth-layout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import { reactive, ref } from 'vue'
 import { useValidation } from '@/composables/useValidation.ts'
-import { authRequest } from '@/api/authRequest'
-import { useRouter } from 'vue-router'
+import { auth } from '@/api/auth.ts'
+import router from '@/router'
+import store from '@/store'
 
-const router = useRouter()
 const formData = reactive({
   login: '',
   password: '',
@@ -100,13 +100,16 @@ const resError = ref('')
 
 async function submitHandler() {
   if (!validate()) return
-  const data = await authRequest('login', {
+  const data = await auth('login', {
     login: formData.login,
     password: formData.password,
   })
   if (!data) {
     return (resError.value = 'Invalid Credentials')
   }
+  store.commit('auth/setUser', data.user)
+  store.commit('auth/setToken', data.token)
+
   router.push({ name: 'home' })
 }
 </script>

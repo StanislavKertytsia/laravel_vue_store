@@ -6,46 +6,52 @@ services:
       context: ./back
       dockerfile: _docker/Dockerfile
     ports:
-      - "${BACK_PORT}:${BACK_PORT}"
+      - "9000:9000"
     volumes:
-      - ./back:/var/www/html
+      - back_data:/var/www/html
+      - back_storage:/var/www/html/public/storage
     depends_on:
       - mysql
     networks:
       - laravel_vue_store
-
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: laravel_vue_store
+      DB_USERNAME: root
+      DB_PASSWORD: laravel_vue_store_pass
 
   front:
     build:
       context: ./front
       dockerfile: _docker/Dockerfile
     ports:
-      - "${FRONT_PORT}:${FRONT_PORT}"
+      - "8000:8000"
     volumes:
-      - ./front:/app
+      - front_data:/app
     depends_on:
       - back
     networks:
       - laravel_vue_store
 
-
   mysql:
     image: mysql:8
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - "${DB_PORT}:3306"
+      - "3300:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: laravel_vue_store_pass
+      MYSQL_DATABASE: laravel_vue_store
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - laravel_vue_store
 
 volumes:
+  back_data:
+  back_storage:
+  front_data:
   mysql_data:
-  front:
-  back:
 
 networks:
   laravel_vue_store:

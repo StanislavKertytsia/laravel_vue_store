@@ -5,7 +5,7 @@ namespace App\Interfaces;
 use App\Dto\Auth\LoginDto;
 use App\Dto\Auth\SignupDto;
 
-interface AuthServiceInterface
+interface AuthInterface
 {
     public function login(LoginDto $dto);
 

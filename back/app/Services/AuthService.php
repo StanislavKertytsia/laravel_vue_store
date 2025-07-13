@@ -4,15 +4,15 @@ namespace App\Services;
 
 use App\Dto\Auth\LoginDto;
 use App\Dto\Auth\SignupDto;
-use App\Interfaces\AuthServiceInterface;
+use App\Interfaces\AuthInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthService implements AuthServiceInterface
+class AuthService implements AuthInterface
 {
-    public function login(LoginDto $dto): string
+    public function login(LoginDto $dto)
     {
         $field = filter_var($dto->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
@@ -25,15 +25,20 @@ class AuthService implements AuthServiceInterface
         $user = Auth::user();
         $user->tokens()->delete();
 
-        return $user->createToken('api-token', ['*'], now()->addWeek())->plainTextToken;
+        $token = $user->createToken('api-token', ['*'], now()->addWeek())->plainTextToken;
+        return ['user' => $user, 'token' => $token];
     }
 
     public function signup(SignupDto $dto)
     {
-        $email = User::where('email', $dto->email)->first();
-        $phone = User::where('phone', $dto->phone)->first();
-        if ($email || $phone) {
-            throw ValidationException::withMessages([]);
+        $userExists = User::where('email', $dto->email)
+            ->orWhere('phone', $dto->phone)
+            ->exists();
+
+        if ($userExists) {
+            throw ValidationException::withMessages([
+                'login' => ['User already exists.'],
+            ]);
         }
 
         $user = User::create([

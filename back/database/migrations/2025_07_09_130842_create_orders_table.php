@@ -10,14 +10,12 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
             $table->uuid('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->string('city')->nullable();
+            $table->string('delivery')->nullable();
             $table->decimal('total', 10, 2)->default(0);
-
             $table->string('status')->default('pending');
-
             $table->timestamps();
         });
     }

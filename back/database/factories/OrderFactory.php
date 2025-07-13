@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
 {
@@ -12,8 +12,8 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'total' => 0,
-            'status' => 'pending',
+            'total' => $this->faker->randomFloat(2, 10, 10000),
+            'status' => $this->faker->randomElement(['pending', 'paid', 'cancelled']),
         ];
     }
 }

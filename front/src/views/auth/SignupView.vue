@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout @submit.prevent="submitHandler">
+  <auth-layout @submit.prevent="submitHandler">
     <template #title> Sign up a new account</template>
     <template #form-items>
       <div>
@@ -12,18 +12,18 @@
       </div>
       <div>
         <label
-          for="name"
           class="block text-sm/6 font-medium text-gray-900"
+          for="name"
           >Name</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.name"
-            type="text"
-            name="name"
             id="name"
-            required
+            v-model="formData.name"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="name"
+            required
+            type="text"
           />
         </div>
         <div>
@@ -37,18 +37,18 @@
       </div>
       <div>
         <label
-          for="lastName"
           class="block text-sm/6 font-medium text-gray-900"
+          for="lastName"
           >Last Name</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.lastName"
-            type="text"
-            name="lastName"
             id="lastName"
-            required
+            v-model="formData.lastName"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="lastName"
+            required
+            type="text"
           />
         </div>
         <div>
@@ -62,18 +62,18 @@
       </div>
       <div>
         <label
-          for="email"
           class="block text-sm/6 font-medium text-gray-900"
+          for="email"
           >Email</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.email"
-            type="email"
-            name="email"
             id="email"
-            required
+            v-model="formData.email"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="email"
+            required
+            type="email"
           />
         </div>
         <div>
@@ -87,18 +87,18 @@
       </div>
       <div>
         <label
-          for="phone"
           class="block text-sm/6 font-medium text-gray-900"
+          for="phone"
           >Phone</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.phone"
-            type="tel"
-            name="phone"
             id="phone"
-            required
+            v-model="formData.phone"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="phone"
+            required
+            type="tel"
           />
         </div>
         <div>
@@ -112,18 +112,18 @@
       </div>
       <div>
         <label
-          for="password"
           class="block text-sm/6 font-medium text-gray-900"
+          for="password"
           >Password</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.password"
-            type="password"
-            name="password"
             id="password"
-            required
+            v-model="formData.password"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="password"
+            required
+            type="password"
           />
         </div>
         <div>
@@ -137,18 +137,18 @@
       </div>
       <div>
         <label
-          for="repeatPassword"
           class="block text-sm/6 font-medium text-gray-900"
+          for="repeatPassword"
           >Repeat password</label
         >
         <div class="mt-2">
           <input
-            v-model="formData.repeatPassword"
-            type="password"
-            name="repeatPassword"
             id="repeatPassword"
-            required
+            v-model="formData.repeatPassword"
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            name="repeatPassword"
+            required
+            type="password"
           />
         </div>
         <div>
@@ -166,21 +166,21 @@
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
         <router-link
-          to="/login"
           class="font-semibold text-indigo-600 hover:text-indigo-500"
+          to="/login"
         >
           Sign in
         </router-link>
       </p>
     </template>
-  </AuthLayout>
+  </auth-layout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import { reactive, ref } from 'vue'
 import { useValidation } from '@/composables/useValidation.ts'
-import { authRequest } from '@/api/authRequest'
+import { auth } from '@/api/auth.ts'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -209,7 +209,7 @@ async function submitHandler() {
   if (formData.password !== formData.repeatPassword) {
     return (validationErrors.repeatPassword = 'Passwords do not match')
   }
-  const data = await authRequest('signup', {
+  const data = await auth('signup', {
     name: formData.name,
     lastName: formData.lastName,
     email: formData.email,

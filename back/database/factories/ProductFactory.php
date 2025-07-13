@@ -9,10 +9,11 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
-            'price' => $this->faker->randomFloat(2, 1, 1000),
-            'description' => $this->faker->sentence(10),
+            'title' => $this->faker->word(3, true),
+            'description' => $this->faker->paragraph,
+            'price' => $this->faker->randomFloat(2, 5, 1000),
             'image' => $this->faker->imageUrl(640, 480, 'product', true),
+            'stock' => $this->faker->numberBetween(0, 10),
         ];
     }
 }

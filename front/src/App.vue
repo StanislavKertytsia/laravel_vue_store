@@ -1,10 +1,11 @@
-<script setup lang="ts">
-</script>
-
 <template>
-    <RouterView />
+  <RouterView />
 </template>
 
-<style scoped>
+<script lang="ts" setup>
+import { useInitAuth } from '@/composables/useInitAuth.ts'
+import { onMounted } from 'vue'
 
-</style>
+onMounted(() => useInitAuth())
+</script>
+<style scoped></style>
